@@ -1,11 +1,11 @@
 "use client";
+import GoogleIcon from "@/icons/GoogleIcon";
 import { Button, Divider, Link } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
-import { FaGithub } from "react-icons/fa"; // GitHub Icon
 
 const LoginPage = () => {
   const router = useRouter();
@@ -29,25 +29,17 @@ const LoginPage = () => {
 
   return (
     <section className="pt-12 pb-20">
-      <h1 className="text-center text-blue-500 text-4xl my-4">
+      <h1 className="text-center text-primary text-4xl my-4">
         Login
       </h1>
       <form className="flex flex-col gap-2 max-w-lg mx-auto mt-12" onSubmit={handleFormSubmit}>
         <EmailInput emailValue={email} setEmail={setEmail} disabled={loginInProgress} className="mb-4" />
         <PasswordInput passwordValue={password} setPassword={setPassword} disabled={loginInProgress} />
         <div className="text-danger my-2">{error}</div>
-        <Button
-
-          fullWidth
-          isLoading={loginInProgress}
-          isDisabled={loginInProgress}
-          className="font-semibold bg-blue-500 text-white"
-        >
-          Login
-        </Button>
+        <Button type="submit" fullWidth isLoading={loginInProgress} isDisabled={loginInProgress} className="font-semibold">Login</Button>
         <div className="text-center mt-4 text-gray-400">
-          don&apos;t have an account?{" "}
-          <Link href={"/register"} isDisabled={loginInProgress} className="text-blue-500">Sign Up</Link>
+          dont&apos;t have an account? {' '}
+          <Link href={"/register"} isDisabled={loginInProgress}>Sign Up</Link>
         </div>
         <div className="my-3 text-center grid grid-cols-3 items-center">
           <Divider />
@@ -57,15 +49,14 @@ const LoginPage = () => {
         <Button
           fullWidth
           disabled={loginInProgress}
-          onClick={() => signIn('github', { callbackUrl: '/' })}
+          onClick={() => signIn('google', { callbackUrl: '/' })}
           className="font-semibold text-dark bg-white border border-dark"
-          startContent={<FaGithub className="w-6 h-6" />}
-        >
-          Login with GitHub
+          startContent={<GoogleIcon className={"w-6"} />}>
+          Login with Google
         </Button>
       </form>
     </section>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

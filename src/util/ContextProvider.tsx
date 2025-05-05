@@ -1,9 +1,9 @@
 'use client'
+
 import CartProduct from '@/types/CartProduct'
-import CartContext from '@/types/CartContext'
+import type CartContext from '@/types/CartContext'
 import MenuItem from '@/types/MenuItem'
 import MenuItemAddOn from '@/types/MenuItemAddOn'
-import { SessionProvider } from "next-auth/react"
 import { createContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -62,10 +62,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <SessionProvider>
-      <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart, clearCart, removeCartProduct }}>
-        {children}
-      </CartContext.Provider>
-    </SessionProvider>
+    <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart, clearCart, removeCartProduct }}>
+      {children}
+    </CartContext.Provider>
   )
 }

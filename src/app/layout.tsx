@@ -6,7 +6,7 @@ import { AppContextProvider } from "../util/ContextProvider";
 import { Toaster } from 'react-hot-toast'
 import PrelineScript from '@/util/PrelineScript';
 import { UIProvider } from '@/util/UIProvider';
-import { SessionProvider } from "next-auth/react"
+import AuthProvider from '@/util/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'EverGreen Pizza: Order Delicious Pizzas Online',
@@ -25,16 +25,16 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Nothing+You+Could+Do&display=swap" rel="stylesheet" />
       </head>
       <body className="font-poppins bg-[url('/assets/bg_dark.jpg')] bg-repeat bg-fixed">
-        <UIProvider>
-          <main>
+        <AuthProvider>
+          <UIProvider>
             <AppContextProvider>
               <Toaster />
               <Header />
               {children}
               <Footer />
             </AppContextProvider>
-          </main>
-        </UIProvider>
+          </UIProvider>
+        </AuthProvider>
       </body>
       <PrelineScript />
     </html>

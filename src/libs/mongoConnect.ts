@@ -1,33 +1,42 @@
-// src/libs/mongoConnect.ts
-
 import { MongoClient } from "mongodb";
+
+declare global {
+  namespace NodeJS {
+    interface Global {
+      _mongoClientPromise?: Promise<MongoClient>;
+    }
+  }
+
+  // Extend the global object to include _mongoClientPromise
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
 
 const uri = process.env.MONGODB_URI;
 
 if (!uri) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-const options = {};
-
-let client: MongoClient;
+let client;
 let clientPromise: Promise<MongoClient>;
 
-// Add custom type to globalThis for TypeScript
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-}
-
-// In development mode, use a global variable so that the value is preserved across hot reloads
 if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable
   if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+    client = new MongoClient(uri, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    });
+    global._mongoClientPromise = client.connect().catch((err) => {
+      console.error("MongoDB connection error:", err);
+      throw err;
+    });
   }
   clientPromise = global._mongoClientPromise;
 } else {
-  // In production, always create a new client
-  client = new MongoClient(uri, options);
+  // In production mode, create a new connection
+  client = new MongoClient(uri, {
+    serverSelectionTimeoutMS: 5000,
+  });
   clientPromise = client.connect();
 }
 

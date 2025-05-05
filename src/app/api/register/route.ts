@@ -1,28 +1,46 @@
-import { User } from "@/app/models/User";
+import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { NextRequest, NextResponse } from "next/server";
+import { User } from "@/app/models/User";
+import bcrypt from "bcrypt";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json();
-    mongoose.connect(process.env.MONGODB_URI!);
-    const createdUser = await User.create(body);
-    return NextResponse.json(createdUser);
-  } catch (err: any) {
-    if (err.name === "ValidationError") {
-      return NextResponse.json({
-        error: err.name,
-        message: "Error: Password must be at least 8 characters.",
-      })
+    await mongoose.connect(process.env.MONGODB_URI!);
+
+    const { name, email, password } = await request.json();
+
+    if (!name || !email || !password) {
+      return NextResponse.json(
+        { message: "Name, email and password are required" },
+        { status: 400 }
+      );
     }
-    else if (err.name === "MongoServerError" && err.code === 11000) {
-      return NextResponse.json({
-        error: err.name,
-        message: "Error: Account with this email already exists.",
-      })
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json(
+        { message: "Email already exists" },
+        { status: 400 }
+      );
     }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    return NextResponse.json({
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
-
-
