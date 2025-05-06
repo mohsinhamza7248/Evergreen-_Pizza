@@ -22,7 +22,9 @@ export async function PUT(req: NextRequest) {
     mongoose.connect(process.env.MONGODB_URI!);
     if (await isAdmin()) {
       const { _id, ...data } = await req.json();
-      const updatedMenuItem = await MenuItem.findByIdAndUpdate({ _id }, data, { new: true });
+      const updatedMenuItem = await MenuItem.findByIdAndUpdate({ _id }, data, {
+        new: true,
+      });
       return NextResponse.json(updatedMenuItem);
     }
     return NextResponse.json({});
@@ -30,11 +32,19 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(err);
   }
 }
-
 export async function GET() {
-  mongoose.connect(process.env.MONGODB_URI!);
-  const menuItems = await MenuItem.find();
-  return NextResponse.json(menuItems);
+  try {
+    await mongoose.connect(process.env.MONGODB_URI!);
+    const menuItems = await MenuItem.find().populate("category");
+    console.log("menu", menuItems);
+    return NextResponse.json(menuItems);
+  } catch (error) {
+    console.error("Error fetching menu items:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch menu items" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -42,7 +52,7 @@ export async function DELETE(req: NextRequest) {
     mongoose.connect(process.env.MONGODB_URI!);
     if (await isAdmin()) {
       const url = new URL(req.url);
-      const _id = url.searchParams.get('_id');
+      const _id = url.searchParams.get("_id");
       const deleteResult = await MenuItem.deleteOne({ _id });
       return NextResponse.json(deleteResult);
     }
