@@ -21,7 +21,11 @@ const MenuItemForm = ({ menuItem, buttonText, onSubmit, onDelete }: MenuItemForm
   const [image, setImage] = useState<string>(menuItem?.image || '');
   const [name, setName] = useState<string>(menuItem?.name || '');
   const [description, setDescription] = useState<string>(menuItem?.description || '');
-  const [category, setCategory] = useState<string>(menuItem?.category || '');
+  const [category, setCategory] = useState<string>(
+    typeof menuItem?.category === 'string'
+      ? menuItem.category
+      : menuItem?.category?._id || ''
+  );
   const [basePrice, setBasePrice] = useState<string>(menuItem?.basePrice.toString() || '');
   const [categories, setCategories] = useState<Category[]>([]);
   const [sizes, setSizes] = useState<MenuItemAddOn[]>(menuItem?.sizes || []);
@@ -50,7 +54,7 @@ const MenuItemForm = ({ menuItem, buttonText, onSubmit, onDelete }: MenuItemForm
               Upload Image
             </>
           )}
-          <ImageUploader setImageLink={setImage}/>
+          <ImageUploader setImageLink={setImage} />
         </label>
       </div>
       <form className='col-span-2' onSubmit={(e) => onSubmit(e, { image, name, description, category, basePrice, sizes, extraIngredientsPrices })}>
