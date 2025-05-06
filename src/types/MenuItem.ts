@@ -5,10 +5,10 @@ type MenuItem = {
   name: string;
   image: string;
   description: string;
-  category: string;
+  category: string | { _id: string; name: string };
   basePrice: string | number;
   sizes: MenuItemAddOn[];
   extraIngredientsPrices: MenuItemAddOn[];
-}
+};
 
 export default MenuItem;
