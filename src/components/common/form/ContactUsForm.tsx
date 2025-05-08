@@ -17,7 +17,8 @@ const ContactUsForm = () => {
     return validateEmail(emailValue) ? false : true;
   }, [emailValue]);
 
-  const form = useRef<HTMLFormElement>();
+  const form = useRef<HTMLFormElement | null>(null);
+
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
