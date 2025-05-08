@@ -18,7 +18,7 @@ const ProfilePage = () => {
   }
 
   if (status === 'loading' || loading && session) {
-    return <Loader className={""}/>
+    return <Loader className={""} />
   }
 
   async function handleProfileUpdate(event: FormEvent<HTMLFormElement>, data: UserProfile) {
@@ -48,8 +48,11 @@ const ProfilePage = () => {
     <section className="pt-10 pb-20">
       {profileData &&
         <>
+          {/* Responsive UserTabs */}
           <UserTabs admin={profileData.isAdmin} className={profileData.isAdmin ? "max-w-6xl mx-auto" : "max-w-2xl mx-auto"} />
-          <div className="mt-16 max-w-2xl mx-auto">
+
+          <div className="mt-16 max-w-2xl mx-auto sm:px-4 md:px-8">
+            {/* Profile Form */}
             <ProfileForm user={profileData} onSave={(event, data) => handleProfileUpdate(event, data)} />
           </div>
         </>

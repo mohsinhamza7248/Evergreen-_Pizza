@@ -18,7 +18,7 @@ const CartProduct = ({ product, productPrice, onRemove }: CartProductProps) => {
         <p className='font-semibold'>{product.menuItem.name}</p>
         {product.selectedSize && (
           <div className='text-sm text-gray-300 py-1'>
-            Size: <span>{product.selectedSize.name} + ${ (product.selectedSize.price as number).toFixed(2)}</span>
+            Size: <span>{product.selectedSize.name} + ${(product.selectedSize.price as number).toFixed(2)}</span>
           </div>
         )}
         {product.selectedExtras.length > 0 && (
@@ -29,16 +29,18 @@ const CartProduct = ({ product, productPrice, onRemove }: CartProductProps) => {
           </div>
         )}
       </div>
-      <div className='items-start text-center'>
-        <p className='font-semibold'>Quantity</p>
-        <p>1</p>
-      </div>
-      <div className='text-right font-semibold'>
-        ${(productPrice).toFixed(2)}
+      <div >
+        <div className='items-start text-center'>
+          <p className='font-semibold'>Quantity</p>
+          <p>1</p>
+        </div>
+        <div className='text-right font-semibold'>
+          ${(productPrice).toFixed(2)}
+        </div>
       </div>
       {!!onRemove && (
         <Tooltip content='Remove'>
-          <div className='ml-6 cursor-pointer' onClick={onRemove}>
+          <div className='pl-6 cursor-pointer text-center' onClick={onRemove}>
             <TrashIcon className={'w-6'} />
           </div>
         </Tooltip>

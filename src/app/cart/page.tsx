@@ -83,18 +83,18 @@ const CartPage = () => {
         <span>Continue shopping</span>
       </Link>
       {cartProducts.length > 0 &&
-        <div className='grid grid-cols-5 mt-8 gap-12'>
-          <div className='col-span-3'>
+        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 mt-8 gap-8'>
+          <div className='col-span-1 md:col-span-3'>
             <h2 className='border-b-1 font-semibold py-3 text-primary'>Cart</h2>
             <div>
               {cartProducts && cartProducts.map((product, index) => (
                 <CartProduct key={index} product={product}
-                onRemove={() => removeCartProduct(index)} productPrice={calCartProductPrice(product)} />
+                  onRemove={() => removeCartProduct(index)} productPrice={calCartProductPrice(product)} />
               ))}
             </div>
             <OrderSummary subtotal={subtotal} deviveryFee={5} discount={0} paid={false} />
           </div>
-          <div className='col-span-2'>
+          <div className='col-span-1 md:col-span-2 p-2'>
             <h2 className='font-semibold py-3 text-primary'>
               Check Out
             </h2>
